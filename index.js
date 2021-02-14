@@ -5,9 +5,9 @@ const stealthPlugin = require('puppeteer-extra-plugin-stealth');
 // Change These Values To Search
 const CITY = 'Delhi';
 const KEYWORD = 'Clinics';
+const INITIAL_PAGE = 0;
 const NUMBER_OF_PAGES = 50;
 
-let directory = [];
 const NUMBER_CODE_MAP = {
   'icon-acb': '0',
   'icon-yz': '1',
@@ -46,7 +46,8 @@ const autoScroll = async (page) => {
 
 const parsePage = async (pageNumber) => {
   puppeteer.use(stealthPlugin());
-
+  
+  const directory = [];
   const browser = await puppeteer.launch({
     headless: true,
     args: ['--no-sandbox'],
@@ -119,6 +120,13 @@ const parsePage = async (pageNumber) => {
   } catch (e) {
     console.error(e);
   } finally {
+    const csv = new ObjectsToCSV(directory);
+
+    await csv.toDisk('./directory.csv', {
+      allColumns: true,
+      append: true,
+    });
+
     await browser.close();
   }
 };
@@ -128,19 +136,14 @@ const main = async () => {
 
   try {
     for await (const page of pages) {
-      console.log('Starting with page', page + 1);
+      const pageNumber = INITIAL_PAGE + page + 1;
 
-      await parsePage(page + 1);
+      console.log('Starting with page', pageNumber);
+
+      await parsePage(pageNumber);
     }
   } catch (e) {
     console.error(e);
-  } finally {
-    const csv = new ObjectsToCSV(directory);
-
-    await csv.toDisk('./directory.csv', {
-      allColumns: true,
-      append: true,
-    });
   }
 
   console.log('Script Execution Complete');
