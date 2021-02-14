@@ -4,7 +4,8 @@ const stealthPlugin = require('puppeteer-extra-plugin-stealth');
 
 // Change These Values To Search
 const CITY = 'Delhi';
-const KEYWORD = 'Clinics-in-Vasant-Kunj';
+const KEYWORD = 'Clinics';
+const NUMBER_OF_PAGES = 50;
 
 let directory = [];
 const NUMBER_CODE_MAP = {
@@ -26,7 +27,7 @@ const NUMBER_CODE_MAP = {
 
 const autoScroll = async (page) => {
   await page.evaluate(async () => {
-    await new Promise((resolve, reject) => {
+    await new Promise((resolve, _) => {
       let totalHeight = 0;
       const distance = 100;
       const timer = setInterval(() => {
@@ -47,7 +48,8 @@ const parsePage = async (pageNumber) => {
   puppeteer.use(stealthPlugin());
 
   const browser = await puppeteer.launch({
-    headless: false,
+    headless: true,
+    args: ['--no-sandbox'],
   });
 
   try {
@@ -122,7 +124,7 @@ const parsePage = async (pageNumber) => {
 };
 
 const main = async () => {
-  const pages = [...Array(50).keys()];
+  const pages = [...Array(NUMBER_OF_PAGES).keys()];
 
   try {
     for await (const page of pages) {
