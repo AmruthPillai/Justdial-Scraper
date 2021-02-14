@@ -47,7 +47,7 @@ const autoScroll = async (page) => {
 const parsePage = async (pageNumber) => {
   puppeteer.use(stealthPlugin());
   
-  const directory = [];
+  let directory = [];
   const browser = await puppeteer.launch({
     headless: true,
     args: ['--no-sandbox'],
