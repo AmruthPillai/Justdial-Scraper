@@ -4,7 +4,7 @@ const stealthPlugin = require('puppeteer-extra-plugin-stealth');
 
 // Change These Values To Search
 const CITY = 'Delhi';
-const KEYWORD = 'Clinics';
+const KEYWORD = 'Pediatrician';
 const INITIAL_PAGE = 0;
 const NUMBER_OF_PAGES = 50;
 
@@ -46,7 +46,7 @@ const autoScroll = async (page) => {
 
 const parsePage = async (pageNumber) => {
   puppeteer.use(stealthPlugin());
-  
+
   let directory = [];
   const browser = await puppeteer.launch({
     headless: true,
